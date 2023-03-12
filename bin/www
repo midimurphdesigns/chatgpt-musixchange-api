@@ -1,0 +1,53 @@
+const express = require('express');
+const app = express();
+app.all('/*', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
+});
+// const cors = require('cors');
+// app.use(cors());
+
+// Set up mock gear data
+const mockGear = [
+  {
+    id: 1,
+    name: 'Fender Stratocaster',
+    description: 'Legendary guitar with classic styling and versatile sound.',
+    imageUrl: 'https://cdn.shopify.com/s/files/1/0255/8659/7968/products/JH-323_cb50d4a4-0a54-4194-8e5c-463ecdd08cdd.jpg?v=1594259861',
+    price: 1500,
+    condition: 'Used',
+    category: 'Guitars'
+  },
+  {
+    id: 2,
+    name: 'Yamaha P-45 Digital Piano',
+    description: '88-key weighted digital piano with realistic sound and feel.',
+    imageUrl: 'https://media.guitarcenter.com/is/image/MMGS7/L30314000001000-00-720x720.jpg',
+    price: 600,
+    condition: 'Used',
+    category: 'Keyboards'
+  },
+  // Add more gear items here
+];
+
+// Set up endpoint to return mock gear data
+app.get('/api/gear', (req, res) => {
+  res.json(mockGear);
+});
+
+app.get('/api/gear/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const gear = mockGear.find((gear) => gear.id === id);
+  if (gear) {
+    res.json(gear);
+  } else {
+    res.status(404).send('Gear not found');
+  }
+});
+
+// Start server
+const port = process.env.PORT || 3001;
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`);
+});
